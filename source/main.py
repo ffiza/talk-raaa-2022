@@ -369,7 +369,7 @@ class Analysis:
         ax.set_yticks([0.1, 1, 10, 100])
         ax.set_yticklabels([0.1, 1, 10, 100])
         ax.set_xlabel(r'Tiempo [Gyr]')
-        ax.set_ylabel(r'$\dot{M}_\mathrm{in}$ '
+        ax.set_ylabel(r'$\dot{M}_\mathrm{out}$ '
                       + r'[$\mathrm{M}_\odot \, \mathrm{yr}^{-1}$]')
 
         for galaxy in galaxies:
