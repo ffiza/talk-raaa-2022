@@ -263,29 +263,38 @@ class Analysis:
 
         :param galaxies: A list of galaxy labels to include in the plot.
         """
-        fig = plt.figure()
-        gs = fig.add_gridspec(ncols=1, nrows=1)
-        ax = gs.subplots(sharex=True, sharey=True)
+        fig = plt.figure(figsize=(4*0.75, 3*1.25))
+        gs = fig.add_gridspec(ncols=1, nrows=2, hspace=0)
+        axs = gs.subplots(sharex=True, sharey=False)
 
-        ax.tick_params(which='both', direction="in")
-        ax.set_axisbelow(True)
-        ax.grid(True, linestyle='--', lw=.5)
-        ax.set_xlim(0, 14)
-        ax.set_xticks([0, 2, 4, 6, 8, 10, 12, 14])
-        ax.set_ylim(0, 40)
-        # ax.set_yticks([-1, -0.5, 0, 0.5, 1])
-        ax.set_xlabel(r'Tiempo [Gyr]')
-        ax.set_ylabel(r'$R_\mathrm{d}$ [kpc]', color='tab:blue')
+        for ax in axs:
+            ax.tick_params(which='both', direction="in")
+            ax.set_axisbelow(True)
+            ax.grid(True, linestyle='--', lw=.5)
+            ax.set_xlim(0, 14)
+            ax.set_xticks([0, 2, 4, 6, 8, 10, 12, 14])
+            ax.set_xlabel(r'Tiempo [Gyr]')
+
+        axs[0].set_ylim(0, 40)
+        axs[1].set_ylim(0, 4)
+
+        axs[0].set_ylabel(r'$R_\mathrm{d}$ [kpc]')
+        axs[1].set_ylabel(r'$h_\mathrm{d}$ [kpc]')
+        axs[1].set_yticks([0, 1, 2, 3])
 
         for galaxy in galaxies:
-            ax.plot(self.dfs[galaxy]['Time'],
-                    self.dfs[galaxy]['ExpFactor']
-                    * savgol_filter(self.dfs[galaxy]['DiscRadius'], 5, 1),
-                    '-', lw=1.5, label=galaxy)
+            axs[0].plot(self.dfs[galaxy]['Time'],
+                        self.dfs[galaxy]['ExpFactor']
+                        * self.dfs[galaxy]['DiscRadius'],
+                        'o-', lw=0.75, ms=3, mec='White', mew=0.5, label=galaxy)
+            axs[1].plot(self.dfs[galaxy]['Time'],
+                        self.dfs[galaxy]['ExpFactor']
+                        * self.dfs[galaxy]['DiscHeight'],
+                        'o-', lw=0.75, ms=3, mec='White', mew=0.5, label=galaxy)
 
-        self.settings.add_redshift(ax)
-        ax.legend(loc='lower left', framealpha=0, fontsize=6)
-        plt.savefig('../images/disc_sizes_evolution.png')
+        self.settings.add_redshift(axs[0])
+        axs[0].legend(loc='upper left', framealpha=0, fontsize=6)
+        plt.savefig('../images/disc_size_evolution.png')
         plt.close(fig)
 
 
@@ -298,8 +307,8 @@ if __name__ == '__main__':
 
     # Make plots
     analysis.plot_virial_mass_dist()
-    analysis.plot_disc_to_total_dist()
-    analysis.plot_disc_to_total_evolution(galaxies=['Au4', 'Au18', 'Au29'])
-    analysis.plot_alignment_dist()
-    analysis.plot_alignment_evolution(galaxies=['Au6', 'Au19', 'Au30'])
-    analysis.plot_disc_size_evolution(galaxies=['Au6'])
+    # analysis.plot_disc_to_total_dist()
+    # analysis.plot_disc_to_total_evolution(galaxies=['Au4', 'Au18', 'Au29'])
+    # analysis.plot_alignment_dist()
+    # analysis.plot_alignment_evolution(galaxies=['Au6', 'Au19', 'Au30'])
+    analysis.plot_disc_size_evolution(galaxies=['Au6', 'Au8', 'Au30'])
