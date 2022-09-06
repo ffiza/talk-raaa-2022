@@ -30,11 +30,11 @@ class Analysis:
         """
         for galaxy in self.settings.galaxies:
             if galaxy in self.settings.galaxies:
-                self._make_original_dataframe(galaxy, False)
+                self._make_galaxy_dataframe(galaxy, False)
             if galaxy in self.settings.reruns:
-                self._make_original_dataframe(galaxy, True)
+                self._make_galaxy_dataframe(galaxy, True)
 
-    def _make_original_dataframe(self, galaxy: int, rerun: bool) -> None:
+    def _make_galaxy_dataframe(self, galaxy: int, rerun: bool) -> None:
         """
         This method makes a data frame with all relevant information for a
         given galaxy.
@@ -84,11 +84,16 @@ class Analysis:
         df['DiscHeight'] = disc_height
 
         # Load present-day virial masses only for the original simulations.
-        if galaxy in self.settings.galaxies:
+        if not rerun:
             virial_masses = np.loadtxt('../data/virial_mass.csv')
             virial_mass = np.nan * np.ones(n_snaps)
             virial_mass[-1] = virial_masses[galaxy]
             df['VirialMass'] = virial_mass
+
+        # Load net accretion rates.
+        if not rerun:
+            net_rate = np.loadtxt(f'{data_path}accretion_cells_disc.csv')
+            df['NetRate'] = net_rate
 
         # Load inflow and outflow rates only for the reruns.
         if rerun:
@@ -374,7 +379,7 @@ class Analysis:
                       + r'[$\mathrm{M}_\odot \, \mathrm{yr}^{-1}$]')
 
         for galaxy in galaxies:
-            is_finite = np.isfinite(self.dfs[galaxy]['InflowRate'])
+            is_finite = np.isfinite(self.dfs[galaxy]['OutflowRate'])
             ax.plot(self.dfs[galaxy]['Time'][is_finite],
                     self.dfs[galaxy]['OutflowRate'][is_finite],
                     'o-', lw=0.75, ms=3, mec='White', mew=0.5,
@@ -383,6 +388,52 @@ class Analysis:
         self.settings.add_redshift(ax)
         ax.legend(loc='lower right', framealpha=0, fontsize=6)
         plt.savefig('../images/outflow_rate.png')
+        plt.close(fig)
+
+    def plot_net_accretion(self, galaxies: list) -> None:
+        """
+        Creates a plot of the evolution of the net accretion rate
+        for a given list of galaxies.
+
+        :param galaxies: A list of galaxy labels to include in the plot.
+        """
+        # Check if rerun is indicated in the labels.
+        for galaxy in galaxies:
+            if '_rerun' in galaxy:
+                raise Exception("_rerun found in labels. This function only"
+                                "runs on the original simulations.")
+
+        fig = plt.figure()
+        gs = fig.add_gridspec(ncols=1, nrows=1)
+        ax = gs.subplots(sharex=True, sharey=True)
+
+        ax.tick_params(which='both', direction="in")
+        ax.set_axisbelow(True)
+        ax.grid(True, linestyle='--', lw=.5)
+        ax.set_xlim(0, 14)
+        ax.set_xticks([0, 2, 4, 6, 8, 10, 12, 14])
+        ax.set_ylim(0.1, 100)
+        ax.set_yscale('log')
+        ax.set_yticks([0.1, 1, 10, 100])
+        ax.set_yticklabels([0.1, 1, 10, 100])
+        ax.set_xlabel(r'Tiempo [Gyr]')
+        ax.set_ylabel(r'$\dot{M}_\mathrm{net}$ '
+                      + r'[$\mathrm{M}_\odot \, \mathrm{yr}^{-1}$]')
+
+        for galaxy in galaxies:
+            is_finite = np.isfinite(self.dfs[galaxy]['NetRate'])
+            is_positive = self.dfs[galaxy]['NetRate'] > 0.1
+            ax.plot(self.dfs[galaxy]['Time'][is_finite & is_positive],
+                    savgol_filter(
+                        self.dfs[galaxy]['NetRate'][is_finite & is_positive],
+                        5,
+                        1),
+                    'o-', lw=0.75, ms=3, mec='White', mew=0.5,
+                    label=galaxy.split('_')[0])
+
+        self.settings.add_redshift(ax)
+        ax.legend(loc='lower right', framealpha=0, fontsize=6)
+        plt.savefig('../images/net_rate.png')
         plt.close(fig)
 
 
@@ -400,5 +451,6 @@ if __name__ == '__main__':
     # analysis.plot_alignment_dist()
     # analysis.plot_alignment_evolution(galaxies=['Au6', 'Au19', 'Au30'])
     # analysis.plot_disc_size_evolution(galaxies=['Au6', 'Au8', 'Au30'])
-    analysis.plot_inflows(galaxies=['Au6_rerun', 'Au13_rerun', 'Au28_rerun'])
+    # analysis.plot_inflows(galaxies=['Au6_rerun', 'Au13_rerun', 'Au28_rerun'])
     analysis.plot_outflows(galaxies=['Au6_rerun', 'Au13_rerun', 'Au28_rerun'])
+    analysis.plot_net_accretion(galaxies=['Au6', 'Au20', 'Au30'])
