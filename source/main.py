@@ -336,10 +336,11 @@ class Analysis:
             is_finite = np.isfinite(self.dfs[galaxy]['InflowRate'])
             ax.plot(self.dfs[galaxy]['Time'][is_finite],
                     self.dfs[galaxy]['InflowRate'][is_finite],
-                    'o-', lw=0.75, ms=3, mec='White', mew=0.5, label=galaxy)
+                    'o-', lw=0.75, ms=3, mec='White', mew=0.5,
+                    label=galaxy.split('_')[0])
 
         self.settings.add_redshift(ax)
-        ax.legend(loc='lower left', framealpha=0, fontsize=6)
+        ax.legend(loc='lower right', framealpha=0, fontsize=6)
         plt.savefig('../images/inflow_rate.png')
         plt.close(fig)
 
@@ -376,10 +377,11 @@ class Analysis:
             is_finite = np.isfinite(self.dfs[galaxy]['InflowRate'])
             ax.plot(self.dfs[galaxy]['Time'][is_finite],
                     self.dfs[galaxy]['OutflowRate'][is_finite],
-                    'o-', lw=0.75, ms=3, mec='White', mew=0.5, label=galaxy)
+                    'o-', lw=0.75, ms=3, mec='White', mew=0.5,
+                    label=galaxy.split('_')[0])
 
         self.settings.add_redshift(ax)
-        ax.legend(loc='lower left', framealpha=0, fontsize=6)
+        ax.legend(loc='lower right', framealpha=0, fontsize=6)
         plt.savefig('../images/outflow_rate.png')
         plt.close(fig)
 
@@ -392,7 +394,7 @@ if __name__ == '__main__':
     analysis.settings.config_plots()
 
     # Make plots
-    analysis.plot_virial_mass_dist()
+    # analysis.plot_virial_mass_dist()
     # analysis.plot_disc_to_total_dist()
     # analysis.plot_disc_to_total_evolution(galaxies=['Au4', 'Au18', 'Au29'])
     # analysis.plot_alignment_dist()
