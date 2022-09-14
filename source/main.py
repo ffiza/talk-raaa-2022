@@ -423,11 +423,11 @@ class Analysis:
         for galaxy in galaxies:
             is_finite = np.isfinite(self.dfs[galaxy]['NetRate'])
             is_positive = self.dfs[galaxy]['NetRate'] > 0.1
-            ax.plot(self.dfs[galaxy]['Time'][is_finite & is_positive],
+            ax.plot(self.dfs[galaxy]['Time'][is_finite & is_positive][:-2],
                     savgol_filter(
                         self.dfs[galaxy]['NetRate'][is_finite & is_positive],
                         5,
-                        1),
+                        1)[:-2],
                     'o-', lw=0.75, ms=3, mec='White', mew=0.5,
                     label=galaxy.split('_')[0])
 
@@ -452,5 +452,5 @@ if __name__ == '__main__':
     # analysis.plot_alignment_evolution(galaxies=['Au6', 'Au19', 'Au30'])
     # analysis.plot_disc_size_evolution(galaxies=['Au6', 'Au8', 'Au30'])
     # analysis.plot_inflows(galaxies=['Au6_rerun', 'Au13_rerun', 'Au28_rerun'])
-    analysis.plot_outflows(galaxies=['Au6_rerun', 'Au13_rerun', 'Au28_rerun'])
-    analysis.plot_net_accretion(galaxies=['Au6', 'Au20', 'Au30'])
+    # analysis.plot_outflows(galaxies=['Au6_rerun', 'Au13_rerun', 'Au28_rerun'])
+    analysis.plot_net_accretion(galaxies=['Au4', 'Au6', 'Au10'])
