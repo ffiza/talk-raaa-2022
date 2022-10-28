@@ -1,2 +1,4 @@
 .idea/
 source/copy_data.py
+.vscode/settings.json
+source/__pycache__
