@@ -15,7 +15,7 @@ class Analysis:
     def __init__(self):
         # Initialize configuration class.
         self.settings = Settings()
-        self.groups = json.load(open("data/groups.json"))
+        self.groups = json.load(open("../data/groups.json"))
 
         self.galaxies = [f"Au{i}" for i in range(1, 31)]
         self.reruns = [
@@ -55,12 +55,12 @@ class Analysis:
         else:
             rerun_str = ''
             n_snaps = 128
-        data_path = f'data/au{galaxy}{rerun_str}/'
+        data_path = f'../data/au{galaxy}{rerun_str}/'
 
         df = pd.DataFrame()
 
         # Add snapshot properties.
-        with open('data/simulation_data.json', 'r') as f:
+        with open('../data/simulation_data.json', 'r') as f:
             data = json.load(f)
             if rerun:
                 df['Time'] = np.array(data['Rerun']['Time_Gyr'])
@@ -91,7 +91,7 @@ class Analysis:
 
         # Load present-day virial masses only for the original simulations.
         if not rerun:
-            virial_masses = np.loadtxt('data/virial_mass.csv')
+            virial_masses = np.loadtxt('../data/virial_mass.csv')
             virial_mass = np.nan * np.ones(n_snaps)
             virial_mass[-1] = virial_masses[galaxy]
             df['VirialMass'] = virial_mass
@@ -137,8 +137,8 @@ class Analysis:
                     'o-', lw=0.75, ms=3, mec='White', mew=0.5, label=galaxy)
 
         self.settings.add_redshift(ax)
-        ax.legend(loc='upper center', framealpha=0, fontsize=6, ncol=3)
-        plt.savefig('images/proceeding/disc_to_total_evolution.png')
+        ax.legend(loc='upper center', framealpha=0, fontsize=8, ncol=3)
+        plt.savefig('../images/proceeding/disc_to_total_evolution.png')
         plt.close(fig)
 
     def plot_alignment_evolution(self, galaxies: list) -> None:
@@ -168,8 +168,8 @@ class Analysis:
                     'o-', lw=0.75, ms=3, mec='White', mew=0.5, label=galaxy)
 
         self.settings.add_redshift(ax)
-        ax.legend(loc='lower left', framealpha=0, fontsize=6)
-        plt.savefig('images/proceeding/alignment_evolution.png')
+        ax.legend(loc='lower left', framealpha=0, fontsize=8)
+        plt.savefig('../images/proceeding/alignment_evolution.png')
         plt.close(fig)
 
     def plot_disc_size_evolution(self, galaxies: list) -> None:
@@ -212,8 +212,8 @@ class Analysis:
                         label=galaxy)
 
         self.settings.add_redshift(axs[0])
-        axs[0].legend(loc='upper left', framealpha=0, fontsize=6)
-        plt.savefig('images/proceeding/disc_size_evolution.png')
+        axs[0].legend(loc='upper left', framealpha=0, fontsize=8)
+        plt.savefig('../images/proceeding/disc_size_evolution.png')
         plt.close(fig)
 
     def plot_inflows(self, galaxies: list) -> None:
@@ -263,8 +263,8 @@ class Analysis:
                     '-', lw=1, color=color, zorder=zorder, label=label)
 
         self.settings.add_redshift(ax)
-        ax.legend(loc='lower right', framealpha=0, fontsize=6)
-        plt.savefig('images/proceeding/inflow_rate.pdf')
+        ax.legend(loc='lower right', framealpha=0, fontsize=8)
+        plt.savefig('../images/proceeding/inflow_rate.pdf')
         plt.close(fig)
 
     def plot_outflows(self, galaxies: list) -> None:
@@ -314,8 +314,8 @@ class Analysis:
                     '-', lw=1, color=color, zorder=zorder, label=label)
 
         self.settings.add_redshift(ax)
-        ax.legend(loc='lower right', framealpha=0, fontsize=6)
-        plt.savefig('images/proceeding/outflow_rate.pdf')
+        ax.legend(loc='lower right', framealpha=0, fontsize=8)
+        plt.savefig('../images/proceeding/outflow_rate.pdf')
         plt.close(fig)
 
     def plot_net_accretion(self, galaxies: list) -> None:
@@ -372,8 +372,8 @@ class Analysis:
                     '-', lw=1, color=color, label=label, zorder=zorder)
 
         self.settings.add_redshift(ax)
-        ax.legend(loc='lower right', framealpha=0, fontsize=6)
-        plt.savefig('images/proceeding/net_rate.pdf')
+        ax.legend(loc='lower right', framealpha=0, fontsize=8)
+        plt.savefig('../images/proceeding/net_rate.pdf')
         plt.close(fig)
 
 
@@ -385,9 +385,9 @@ if __name__ == '__main__':
     analysis.settings.config_plots()
 
     # Make plots
-    analysis.plot_disc_to_total_evolution(galaxies=['Au4', 'Au18', 'Au29'])
-    analysis.plot_alignment_evolution(galaxies=['Au6', 'Au19', 'Au30'])
-    analysis.plot_disc_size_evolution(galaxies=['Au6', 'Au8', 'Au30'])
+    # analysis.plot_disc_to_total_evolution(galaxies=['Au4', 'Au18', 'Au29'])
+    # analysis.plot_alignment_evolution(galaxies=['Au6', 'Au19', 'Au30'])
+    # analysis.plot_disc_size_evolution(galaxies=['Au6', 'Au8', 'Au30'])
     analysis.plot_inflows(galaxies=['Au6_rerun', 'Au13_rerun', 'Au28_rerun'])
     analysis.plot_outflows(galaxies=['Au6_rerun', 'Au13_rerun', 'Au28_rerun'])
     analysis.plot_net_accretion(galaxies=['Au4', 'Au6', 'Au10'])

@@ -14,9 +14,9 @@ class Settings:
 
         # Plot configurations
         self.dpi = 800
-        self.figsize = (4*0.75, 3*0.75)
-        self.fontsize = 8
-        self.label_fontsize = 10
+        self.figsize = (3, 2.25)
+        self.fontsize = 10
+        self.label_fontsize = 12
         self.pad_inches = 0.02
         self.grid_linewidth = 0.5
 
@@ -27,27 +27,27 @@ class Settings:
         """
         Configure plot style.
         """
-        params = {'figure.dpi':         self.dpi,
-                  'figure.figsize':     self.figsize,
-                  'text.usetex':        True,
-                  'font.size':          self.fontsize,
-                  'font.family':        'serif',
-                  'axes.labelsize':     self.label_fontsize,
-                  'xtick.top':          'on',
+        params = {'figure.dpi': self.dpi,
+                  'figure.figsize': self.figsize,
+                  'text.usetex': True,
+                  'font.size': self.fontsize,
+                  'font.family': 'serif',
+                  'axes.labelsize': self.label_fontsize,
+                  'xtick.top': 'on',
                   'xtick.minor.bottom': 'on',
-                  'xtick.minor.top':    'on',
-                  'xtick.direction':    'in',
-                  'ytick.right':        'on',
-                  'ytick.minor.left':   'on',
-                  'ytick.minor.right':  'on',
-                  'ytick.direction':    'in',
-                  'savefig.dpi':        self.dpi,
-                  'savefig.bbox':       'tight',
+                  'xtick.minor.top': 'on',
+                  'xtick.direction': 'in',
+                  'ytick.right': 'on',
+                  'ytick.minor.left': 'on',
+                  'ytick.minor.right': 'on',
+                  'ytick.direction': 'in',
+                  'savefig.dpi': self.dpi,
+                  'savefig.bbox': 'tight',
                   'savefig.pad_inches': self.pad_inches,
-                  'axes.axisbelow':     True,
-                  'axes.grid':          True,
-                  'grid.linestyle':     '--',
-                  'grid.linewidth':     self.grid_linewidth}
+                  'axes.axisbelow': True,
+                  'axes.grid': True,
+                  'grid.linestyle': '--',
+                  'grid.linewidth': self.grid_linewidth}
         plt.rcParams.update(params)
 
     def add_redshift(self, ax: plt.Axes) -> None:
