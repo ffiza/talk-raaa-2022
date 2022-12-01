@@ -18,8 +18,8 @@ class Analysis:
         self.groups = json.load(open("data/groups.json"))
 
         self.galaxies = [f"Au{i}" for i in range(1, 31)]
-        self.reruns = [f"Au{i}_rerun" for i in [5, 6, 9, 13, 17,
-                                                23, 24, 26, 28]]
+        self.reruns = [
+            f"Au{i}_rerun" for i in [5, 6, 9, 13, 17, 23, 24, 26, 28]]
 
         # Initialize data frames. This is a dictionary for each galaxy, where
         # values are data frames that contain all relevant information of each
